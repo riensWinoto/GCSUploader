@@ -1,5 +1,5 @@
 import sys
-#import os \use this when using environ for automatic assign Google Application Credentials
+# import os #use this when using environ for automatic assign Google Application Credentials
 from google.cloud import storage
 
 class Uploader:
@@ -8,7 +8,7 @@ class Uploader:
         self.bucketName = bucketName
 
         if self.bucketName == "":
-            self.bucketName = input("Please enter your bucket name:")
+            self.bucketName = input("Please enter your bucket name: ")
             if self.bucketName == "":
                 print("Next time fill your bucket name")
                 sys.exit()
@@ -22,8 +22,11 @@ class Uploader:
 
     def enterDirNewContent(self, dirNewContent):
         self.dirNewContent = dirNewContent
-        self.dirNewContent = self.dirNewContent + "/"
-        return self.dirNewContent
+        if self.dirNewContent == "":
+            return self.dirNewContent
+        else:
+            self.dirNewContent = self.dirNewContent + "/"
+            return self.dirNewContent
 
     def enterNewContentName(self, newContentName):
         self.newContentName = newContentName
@@ -50,7 +53,7 @@ def clientBucket(self):
 if __name__ == "__main__":
     # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json"
     gUploader = Uploader()
-    bucketIS = gUploader.getBucketName(input("Enter your bucket name:"))
+    bucketIS = gUploader.getBucketName(input("Enter your bucket name: "))
 
 # looping stage
     countNum = 0
@@ -61,5 +64,5 @@ if __name__ == "__main__":
         dirImgOut = dirContentGCS + nameContentGCS
         blobGCS = bucketIS.blob(dirImgOut)
         blobGCS.upload_from_filename(filename=localDir)
-        print("This is your content directory and name:" + dirImgOut)
-        print("this is your content you upload to GCS:" + localDir + "\n")
+        print("This is your content directory and name: " + dirImgOut)
+        print("this is your content you upload to GCS: " + localDir + "\n")
