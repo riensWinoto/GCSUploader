@@ -1,4 +1,5 @@
 import sys
+#import os \use this when using environ for automatic assign Google Application Credentials
 from google.cloud import storage
 
 class Uploader:
@@ -21,6 +22,7 @@ class Uploader:
 
     def enterDirNewContent(self, dirNewContent):
         self.dirNewContent = dirNewContent
+        self.dirNewContent = self.dirNewContent + "/"
         return self.dirNewContent
 
     def enterNewContentName(self, newContentName):
@@ -45,17 +47,19 @@ def clientBucket(self):
     return client.get_bucket(self.bucketName)
 
 # initial stage
-gUploader = Uploader()
-bucketIS = gUploader.getBucketName(input("Enter your bucket name:"))
+if __name__ == "__main__":
+    # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json"
+    gUploader = Uploader()
+    bucketIS = gUploader.getBucketName(input("Enter your bucket name:"))
 
 # looping stage
-countNum = 0
-while countNum < 1:
-    dirContentGCS = gUploader.enterDirNewContent(str(input("Enter directory for new content and end with /: ")))
-    nameContentGCS = gUploader.enterNewContentName(str(input("Enter your desired file name include extension: ")))
-    localDir = gUploader.enterLocalContentDir(str(input("Enter your content directory to upload: ")))
-    dirImgOut = dirContentGCS + nameContentGCS
-    blobGCS = bucketIS.blob(dirImgOut)
-    blobGCS.upload_from_filename(filename=localDir)
-    print("This is your content directory and name:" + dirImgOut)
-    print("this is your content you upload to GCS:" + localDir + "\n")
+    countNum = 0
+    while countNum < 1:
+        dirContentGCS = gUploader.enterDirNewContent(str(input("Enter directory for new content: ")))
+        nameContentGCS = gUploader.enterNewContentName(str(input("Enter your desired file name include extension: ")))
+        localDir = gUploader.enterLocalContentDir(str(input("Enter your content directory to upload: ")))
+        dirImgOut = dirContentGCS + nameContentGCS
+        blobGCS = bucketIS.blob(dirImgOut)
+        blobGCS.upload_from_filename(filename=localDir)
+        print("This is your content directory and name:" + dirImgOut)
+        print("this is your content you upload to GCS:" + localDir + "\n")
