@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 #### Changed
 - Function name more readability than before
 
-####Added
+#### Added
 - Add if conditional when input local content directory
 
  
