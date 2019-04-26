@@ -1,5 +1,5 @@
 import sys
-# import os #use this when using environ for automatic assign Google Application Credentials
+#import os #use this when using environ for automatic assign Google Application Credentials
 from google.cloud import storage
 
 
@@ -56,9 +56,10 @@ class Uploader:
 
 # initial stage
 if __name__ == "__main__":
-    # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json" # or "path/to/serviceAccount.json
+    #os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json" # or "path/to/serviceAccount.json"
     gcsUploader = Uploader()
     gcsBucket = gcsUploader.get_bucket_name(input("Enter your bucket name: "))
+    gcsBucketName = gcsBucket.name
 
 # looping stage
     countNum = 0
@@ -69,5 +70,5 @@ if __name__ == "__main__":
         pathOnGCS = newDirGCS + newNameGCS
         blobGCS = gcsBucket.blob(pathOnGCS)
         blobGCS.upload_from_filename(filename=localDir)
-        print("This is your content directory and name: " + pathOnGCS)
-        print("this is your content you upload to GCS: " + localDir + "\n")
+        print("In your {} bucket, your uploaded content located at {} path".format(gcsBucketName, pathOnGCS))
+        print("{} is your content you just upload to GCS".format(localDir) + "\n")
