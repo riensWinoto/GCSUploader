@@ -1,5 +1,5 @@
 import sys
-import os #use this when using environ for automatic assign Google Application Credentials
+#import os #use this when using environ for automatic assign Google Application Credentials
 from datetime import datetime
 from google.cloud import storage
 
@@ -15,10 +15,10 @@ class Uploader:
                 sys.exit()
             else:
                 bucket_gcs = Uploader.client_bucket(self)
-                return bucket_gcs
+                return bucket_gcs, bucket_gcs.name
         else:
             bucket_gcs = Uploader.client_bucket(self)
-            return bucket_gcs
+            return bucket_gcs, bucket_gcs.name
 
     def client_bucket(self):
         client = storage.Client()
@@ -62,10 +62,9 @@ class Uploader:
 
 # initial stage
 if __name__ == "__main__":
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../../../rook-ComputeEngineServiceAccount.json" # or "path/to/serviceAccount.json"
+    #os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json" # or "path/to/serviceAccount.json"
     gcsUploader = Uploader()
-    gcsBucket = gcsUploader.get_bucket_name(input("Enter your bucket name: "))
-    gcsBucketName = gcsBucket.name
+    gcsBucket, gcsBucketName = gcsUploader.get_bucket_name(input("Enter your bucket name: "))
 
 # looping stage
     countNum = 0
