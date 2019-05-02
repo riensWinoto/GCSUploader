@@ -24,6 +24,12 @@ class Uploader:
         client = storage.Client()
         return client.get_bucket(self.bucket_name)
 
+    def get_all_requirements (self):
+        new_dir_gcs = gcsUploader.new_content_directory(str(input("Enter directory for new content: ")))
+        new_name_gcs = gcsUploader.new_content_name(str(input("Enter your desired file name include extension: ")))
+        local_dir = gcsUploader.local_content_directory(str(input("Enter your content directory to upload: ")))
+        return new_dir_gcs, new_name_gcs, local_dir
+
     def new_content_directory(self, new_content_dir):
         self.new_content_dir = new_content_dir
         if self.new_content_dir == "":
@@ -69,9 +75,7 @@ if __name__ == "__main__":
 # looping stage
     countNum = 0
     while countNum < 1:
-        newDirGCS = gcsUploader.new_content_directory(str(input("Enter directory for new content: ")))
-        newNameGCS = gcsUploader.new_content_name(str(input("Enter your desired file name include extension: ")))
-        localDir = gcsUploader.local_content_directory(str(input("Enter your content directory to upload: ")))
+        newDirGCS, newNameGCS, localDir = gcsUploader.get_all_requirements()
         pathOnGCS = newDirGCS + newNameGCS
         blobGCS = gcsBucket.blob(pathOnGCS)
         blobGCS.upload_from_filename(filename=localDir)
