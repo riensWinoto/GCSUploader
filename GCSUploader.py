@@ -1,5 +1,6 @@
 import sys
 #import os #use this when using environ for automatic assign Google Application Credentials
+from datetime import datetime
 from google.cloud import storage
 
 
@@ -70,5 +71,8 @@ if __name__ == "__main__":
         pathOnGCS = newDirGCS + newNameGCS
         blobGCS = gcsBucket.blob(pathOnGCS)
         blobGCS.upload_from_filename(filename=localDir)
+        dateAndTime = datetime.now()
+        strDateAndTime = dateAndTime.strftime('%Y/%m/%d %I:%M:%S%p')
         print("In your {} bucket, your uploaded content located at {} path".format(gcsBucketName, pathOnGCS))
-        print("{} is your content you just upload to GCS".format(localDir) + "\n")
+        print("{} is your content you just upload to GCS".format(localDir))
+        print("{} is your upload date and time".format(strDateAndTime) + "\n")
