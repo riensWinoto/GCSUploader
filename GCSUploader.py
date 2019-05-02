@@ -1,5 +1,5 @@
 import sys
-#import os #use this when using environ for automatic assign Google Application Credentials
+import os #use this when using environ for automatic assign Google Application Credentials
 from datetime import datetime
 from google.cloud import storage
 
@@ -55,9 +55,14 @@ class Uploader:
         else:
             return self.content_directory
 
+    def get_date_time(self):
+        date_and_time = datetime.now()
+        str_date_time = date_and_time.strftime('%Y/%m/%d %I:%M:%S%p')
+        return str_date_time
+
 # initial stage
 if __name__ == "__main__":
-    #os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json" # or "path/to/serviceAccount.json"
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../../../rook-ComputeEngineServiceAccount.json" # or "path/to/serviceAccount.json"
     gcsUploader = Uploader()
     gcsBucket = gcsUploader.get_bucket_name(input("Enter your bucket name: "))
     gcsBucketName = gcsBucket.name
@@ -71,8 +76,7 @@ if __name__ == "__main__":
         pathOnGCS = newDirGCS + newNameGCS
         blobGCS = gcsBucket.blob(pathOnGCS)
         blobGCS.upload_from_filename(filename=localDir)
-        dateAndTime = datetime.now()
-        strDateAndTime = dateAndTime.strftime('%Y/%m/%d %I:%M:%S%p')
+        dateAndTime = gcsUploader.get_date_time()
         print("In your {} bucket, your uploaded content located at {} path".format(gcsBucketName, pathOnGCS))
         print("{} is your content you just upload to GCS".format(localDir))
-        print("{} is your upload date and time".format(strDateAndTime) + "\n")
+        print("{} is your upload date and time".format(dateAndTime) + "\n")
