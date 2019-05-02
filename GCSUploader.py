@@ -25,9 +25,9 @@ class Uploader:
         return client.get_bucket(self.bucket_name)
 
     def get_all_requirements (self):
-        new_dir_gcs = gcsUploader.new_content_directory(str(input("Enter directory for new content: ")))
-        new_name_gcs = gcsUploader.new_content_name(str(input("Enter your desired file name include extension: ")))
-        local_dir = gcsUploader.local_content_directory(str(input("Enter your content directory to upload: ")))
+        new_dir_gcs = Uploader.new_content_directory(self, str(input("Enter directory for new content: ")))
+        new_name_gcs = Uploader.new_content_name(self, str(input("Enter your desired file name include extension: ")))
+        local_dir = Uploader.local_content_directory(self, str(input("Enter your content directory to upload: ")))
         return new_dir_gcs, new_name_gcs, local_dir
 
     def new_content_directory(self, new_content_dir):
