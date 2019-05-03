@@ -92,7 +92,11 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         time.sleep(1.0)
         sys.exit()
-    except exceptions.NotFound:
-        print ("Please enter the right bucket name next time")
-    except exceptions.Forbidden:
-        print ("Please enter the right bucket name next time")
+
+    except exceptions.NotFound as err:
+        print(err)
+        print("Please enter the right bucket name next time")
+
+    except exceptions.Forbidden as err:
+        print(err)
+        print("Please enter the right bucket name next time")
