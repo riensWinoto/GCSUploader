@@ -2,7 +2,7 @@ import sys
 import time
 #import os #use this when using environ for automatic assign Google Application Credentials
 from datetime import datetime
-from google.cloud import storage
+from google.cloud import storage, exceptions
 
 
 class Uploader:
@@ -92,3 +92,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         time.sleep(1.0)
         sys.exit()
+    except exceptions.NotFound:
+        print ("Please enter the right bucket name next time")
+    except exceptions.Forbidden:
+        print ("Please enter the right bucket name next time")
