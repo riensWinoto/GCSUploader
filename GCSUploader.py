@@ -1,4 +1,5 @@
 import sys
+import time
 #import os #use this when using environ for automatic assign Google Application Credentials
 from datetime import datetime
 from google.cloud import storage
@@ -68,18 +69,22 @@ class Uploader:
 
 # initial stage
 if __name__ == "__main__":
-    #os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json" # or "path/to/serviceAccount.json"
-    gcsUploader = Uploader()
-    gcsBucket, gcsBucketName = gcsUploader.get_bucket_name(input("Enter your bucket name: "))
+    try:
+        #os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json" # or "path/to/serviceAccount.json"
+        gcsUploader = Uploader()
+        gcsBucket, gcsBucketName = gcsUploader.get_bucket_name(input("Enter your bucket name: "))
 
 # looping stage
-    countNum = 0
-    while countNum < 1:
-        newDirGCS, newNameGCS, localDir = gcsUploader.get_all_requirements()
-        pathOnGCS = newDirGCS + newNameGCS
-        blobGCS = gcsBucket.blob(pathOnGCS)
-        blobGCS.upload_from_filename(filename=localDir)
-        dateAndTime = gcsUploader.get_date_time()
-        print("In your {} bucket, your uploaded content located at {} path".format(gcsBucketName, pathOnGCS))
-        print("{} is your content you just upload to GCS".format(localDir))
-        print("{} is your upload date and time".format(dateAndTime) + "\n")
+        countNum = 0
+        while countNum < 1:
+            newDirGCS, newNameGCS, localDir = gcsUploader.get_all_requirements()
+            pathOnGCS = newDirGCS + newNameGCS
+            blobGCS = gcsBucket.blob(pathOnGCS)
+            blobGCS.upload_from_filename(filename=localDir)
+            dateAndTime = gcsUploader.get_date_time()
+            print("In your {} bucket, your uploaded content located at {} path".format(gcsBucketName, pathOnGCS))
+            print("{} is your content you just upload to GCS".format(localDir))
+            print("{} is your upload date and time".format(dateAndTime) + "\n")
+    except KeyboardInterrupt:
+        time.sleep(1.0)
+        sys.exit()
