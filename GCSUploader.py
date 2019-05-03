@@ -77,14 +77,18 @@ if __name__ == "__main__":
 # looping stage
         countNum = 0
         while countNum < 1:
-            newDirGCS, newNameGCS, localDir = gcsUploader.get_all_requirements()
-            pathOnGCS = newDirGCS + newNameGCS
-            blobGCS = gcsBucket.blob(pathOnGCS)
-            blobGCS.upload_from_filename(filename=localDir)
-            dateAndTime = gcsUploader.get_date_time()
-            print("In your {} bucket, your uploaded content located at {} path".format(gcsBucketName, pathOnGCS))
-            print("{} is your content you just upload to GCS".format(localDir))
-            print("{} is your upload date and time".format(dateAndTime) + "\n")
+            try:
+                newDirGCS, newNameGCS, localDir = gcsUploader.get_all_requirements()
+                pathOnGCS = newDirGCS + newNameGCS
+                blobGCS = gcsBucket.blob(pathOnGCS)
+                blobGCS.upload_from_filename(filename=localDir)
+                dateAndTime = gcsUploader.get_date_time()
+                print("In your {} bucket, your uploaded content located at {} path".format(gcsBucketName, pathOnGCS))
+                print("{} is your content you just upload to GCS".format(localDir))
+                print("{} is your upload date and time".format(dateAndTime) + "\n")
+            except FileNotFoundError as err:
+                print(err)
+                print("Please enter the right content directory next time" + "\n")
     except KeyboardInterrupt:
         time.sleep(1.0)
         sys.exit()
