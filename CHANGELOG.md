@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [Released]
+### 1.1.0 (2019-05-10)
+#### Changed
+- Change some structure into function
+
+#### Added
+- Add error handler
+
 ### 1.0.1 (2019-04-25)
 #### Changed
 - Function name more readability than before
