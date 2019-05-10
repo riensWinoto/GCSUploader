@@ -1,6 +1,8 @@
 import sys
-# import os #use this when using environ for automatic assign Google Application Credentials
-from google.cloud import storage
+import time
+#import os #use this when using environ for automatic assign Google Application Credentials
+from datetime import datetime
+from google.cloud import storage, exceptions
 
 
 class Uploader:
@@ -14,14 +16,20 @@ class Uploader:
                 sys.exit()
             else:
                 bucket_gcs = Uploader.client_bucket(self)
-                return bucket_gcs
+                return bucket_gcs, bucket_gcs.name
         else:
             bucket_gcs = Uploader.client_bucket(self)
-            return bucket_gcs
+            return bucket_gcs, bucket_gcs.name
 
     def client_bucket(self):
         client = storage.Client()
         return client.get_bucket(self.bucket_name)
+
+    def get_all_requirements (self):
+        new_dir_gcs = Uploader.new_content_directory(self, str(input("Enter directory for new content: ")))
+        new_name_gcs = Uploader.new_content_name(self, str(input("Enter your desired file name include extension: ")))
+        local_dir = Uploader.local_content_directory(self, str(input("Enter your content directory to upload: ")))
+        return new_dir_gcs, new_name_gcs, local_dir
 
     def new_content_directory(self, new_content_dir):
         self.new_content_dir = new_content_dir
@@ -54,20 +62,41 @@ class Uploader:
         else:
             return self.content_directory
 
+    def get_date_time(self):
+        date_and_time = datetime.now()
+        str_date_time = date_and_time.strftime('%Y/%m/%d %I:%M:%S%p')
+        return str_date_time
+
 # initial stage
 if __name__ == "__main__":
-    # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json" # or "path/to/serviceAccount.json
-    gcsUploader = Uploader()
-    gcsBucket = gcsUploader.get_bucket_name(input("Enter your bucket name: "))
+    try:
+        #os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "yourServiceAccount.json" # or "path/to/serviceAccount.json"
+        gcsUploader = Uploader()
+        gcsBucket, gcsBucketName = gcsUploader.get_bucket_name(input("Enter your bucket name: "))
 
 # looping stage
-    countNum = 0
-    while countNum < 1:
-        newDirGCS = gcsUploader.new_content_directory(str(input("Enter directory for new content: ")))
-        newNameGCS = gcsUploader.new_content_name(str(input("Enter your desired file name include extension: ")))
-        localDir = gcsUploader.local_content_directory(str(input("Enter your content directory to upload: ")))
-        pathOnGCS = newDirGCS + newNameGCS
-        blobGCS = gcsBucket.blob(pathOnGCS)
-        blobGCS.upload_from_filename(filename=localDir)
-        print("This is your content directory and name: " + pathOnGCS)
-        print("this is your content you upload to GCS: " + localDir + "\n")
+        countNum = 0
+        while countNum < 1:
+            try:
+                newDirGCS, newNameGCS, localDir = gcsUploader.get_all_requirements()
+                pathOnGCS = newDirGCS + newNameGCS
+                blobGCS = gcsBucket.blob(pathOnGCS)
+                blobGCS.upload_from_filename(filename=localDir)
+                dateAndTime = gcsUploader.get_date_time()
+                print("In your {} bucket, your uploaded content located at {} path".format(gcsBucketName, pathOnGCS))
+                print("{} is your content you just upload to GCS".format(localDir))
+                print("{} is your upload date and time".format(dateAndTime) + "\n")
+            except FileNotFoundError as err:
+                print(err)
+                print("Please enter the right content directory next time" + "\n")
+    except KeyboardInterrupt:
+        time.sleep(1.0)
+        sys.exit()
+
+    except exceptions.NotFound as err:
+        print(err)
+        print("Please enter the right bucket name next time")
+
+    except exceptions.Forbidden as err:
+        print(err)
+        print("Please enter the right bucket name next time")
