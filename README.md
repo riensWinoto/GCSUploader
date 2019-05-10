@@ -5,6 +5,8 @@ Google Cloud Storage Uploader using library that provided by Google.
 
 Work well for administrator that not have access to Google Cloud Platform but need to upload something to Google Cloud Storage.
 
+![ScreenShot Demo](GCSUploaderDemo.png)
+
 ## Requirements
 - Python 3.5
 - Google Cloud library
@@ -30,10 +32,10 @@ export GOOGLE_APPLICATION_CREDENTIALS="yourServiceAccount.json"
 2. Just run it 
 
    - In this GCSUploader, there are some requirement you must fill it right:
-     - Bucket Name
-     - Directory (optional to fill)
-     - Content Name
-     - Your content that you want to upload
+     - **Bucket Name**
+     - **Directory** (optional to fill)
+     - **Content Name**
+     - **Your content that you want to upload**
   
    - For directory, you can leave it blank so your content will located in your bucket root.
 
